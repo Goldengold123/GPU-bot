@@ -88,7 +88,7 @@ async def tictactoe(ctx):
         return (not (win(myBoard, '❌'))) and (not (win(myBoard, '⭕'))) and len(myFilled) == 9
 
     while not (draw(letters, filled)) and not (win(letters, '❌')) and not (win(letters, '⭕')):
-        
+
     '''
     while not (draw(letters, filled)) and not (win(letters, '❌')) and not (win(letters, '⭕')):
 

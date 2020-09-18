@@ -1,6 +1,7 @@
 import discord
 
 from discord.ext import commands
+from discord import Embed
 from dotenv import load_dotenv
 from credentials import TOKEN, PREFIX
 
@@ -20,14 +21,24 @@ async def on_ready():
 
 @bot.command(name='tictactoe', help='Tic Tac Toe for 2 players.')
 async def tictactoe(ctx):
-    await ctx.send('Player 1 please send a message.')
-    msg1 = await bot.wait_for('message')
-    user1 = msg1.author
-    channel1 = msg1.channel
-    await ctx.send('Player 2 please send a message.')
-    msg2 = await bot.wait_for('message')
-    user2 = msg2.author
-    channel2 = msg2.channel
+    def createEmbed(gameNum, description, colour):
+        myEmbed = discord.Embed(
+            title='Tic Tac Toe - G'+str(gameNum),
+            description=description,
+            colour=colour,
+        )
+        return myEmbed
+    checkPlayers = createEmbed(1, 'Tic Tac Toe for 2 players.', 0x55ACEE)
+    checkPlayers.set_footer(text='Player 1 react with ❌, Player 2 react with ⭕.')
+    sent = await ctx.send(embed=checkPlayers)
+    await sent.add_reaction('❌')
+    await sent.add_reaction('⭕')
+    def checkReaction(reaction, user):
+        if str(reaction.emoji) == '❌':
+            user1 = user
+        if str(reaction.emoji) == '⭕':
+            user2 = user
+
     letters = {
         'A': '🇦',
         'B': '🇧',
@@ -77,6 +88,9 @@ async def tictactoe(ctx):
         return (not (win(myBoard, '❌'))) and (not (win(myBoard, '⭕'))) and len(myFilled) == 9
 
     while not (draw(letters, filled)) and not (win(letters, '❌')) and not (win(letters, '⭕')):
+        
+    '''
+    while not (draw(letters, filled)) and not (win(letters, '❌')) and not (win(letters, '⭕')):
 
         await ctx.send(drawBoard() + '\n' + 'Player 1, send the letter of where you would like to go.')
 
@@ -109,6 +123,6 @@ async def tictactoe(ctx):
         if win(letters, '⭕'):
             await ctx.send('Congrats! Player 2 has won!' + '\n' + drawBoard())
             break
-
+    '''
 
 bot.run(TOKEN)
